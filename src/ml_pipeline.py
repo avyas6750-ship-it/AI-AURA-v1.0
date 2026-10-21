@@ -192,24 +192,35 @@ class Retrainer:
             # won't include it (which is fine for the demo).
             print(f"[Retrainer.append_sample] Cannot write to {DATASET_PATH}: {e}")
 
-    def retrain(self, classifier: AcousticClassifier) -> dict:
+        def retrain(self, classifier: AcousticClassifier) -> dict:
         """Retrain the RandomForest on the accumulated CSV dataset.
 
         Returns a dict with new version, accuracy, and sample count.
+        On Vercel (read-only filesystem), this will return an error.
         """
-        import pandas as pd
         from sklearn.model_selection import cross_val_score
 
         if not DATASET_PATH.exists():
             return {"status": "no_data", "message": "No labeled samples yet."}
 
-        df = pd.read_csv(DATASET_PATH)
-        if len(df) < 6 or df["label"].nunique() < 2:
-            return {"status": "insufficient",
-                    "message": f"Need >=6 samples covering >=2 classes; have {len(df)} samples / {df['label'].nunique()} classes."}
+        # Read CSV without pandas (lighter dependency footprint)
+        import csv
+        with open(DATASET_PATH) as f:
+            reader = csv.DictReader(f)
+            rows = list(reader)
 
-        X = df[FEATURE_NAMES].values
-        y = df["label"].values
+        if len(rows) < 6:
+            return {"status": "insufficient",
+                    "message": f"Need >=6 samples; have {len(rows)}."}
+
+        labels = [r["label"] for r in rows]
+        unique_labels = set(labels)
+        if len(unique_labels) < 2:
+            return {"status": "insufficient",
+                    "message": f"Need >=2 classes; have {len(unique_labels)}."}
+
+        X = np.array([[float(r[name]) for name in FEATURE_NAMES] for r in rows])
+        y = np.array(labels)
 
         pipeline = Pipeline([
             ("scaler", StandardScaler()),
