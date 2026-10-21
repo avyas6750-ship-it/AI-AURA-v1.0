@@ -1,0 +1,11 @@
+{
+  "version": "1.0.0",
+  "history": [
+    {
+      "version": "1.0.0",
+      "accuracy": 1.0,
+      "trained_on": 12,
+      "note": "Baseline RandomForest on 12 synthetic samples"
+    }
+  ]
+}
