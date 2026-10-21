@@ -1,11 +1,12 @@
 # ============================================================
-# HYDROGRAPH - Python dependencies
-# Tested on Python 3.12.14
+# HYDROGRAPH - Python dependencies (RUNTIME ONLY)
+# Only what the Vercel serverless function needs to run.
+# Build-time deps (matplotlib, pandas, plotly) are NOT included
+# to keep the serverless function bundle under 500 MB.
 # ============================================================
 
-# ---- Web framework ----
+# ---- Web framework (ASGI) ----
 fastapi>=0.115.0
-uvicorn[standard]>=0.30.0
 python-multipart>=0.0.9
 mangum>=0.17.0
 
@@ -15,11 +16,6 @@ soundfile>=0.12.1
 scipy>=1.11.0
 numpy>=1.24.0
 
-# ---- ML ----
+# ---- ML (inference only) ----
 scikit-learn>=1.3.0
 joblib>=1.3.0
-
-# ---- Data / viz helpers (used by scripts) ----
-matplotlib>=3.7.0
-pandas>=2.0.0
-plotly>=5.18.0
