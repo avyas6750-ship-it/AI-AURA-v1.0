@@ -3,8 +3,8 @@
 set -euo pipefail
 
 echo "[vercel-install] Installing Python dependencies for serverless functions…"
-pip install --upgrade pip
-pip install -r requirements.txt
+pip install --upgrade pip --break-system-packages
+pip install -r requirements.txt --break-system-packages
 
 # Pre-generate the synthetic audio samples + train the baseline model.
 # These get bundled with the serverless function deployment.
