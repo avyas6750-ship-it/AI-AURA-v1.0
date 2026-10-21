@@ -1,0 +1,16 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "version": 2,
+  "buildCommand": "bash scripts/vercel-build.sh",
+  "installCommand": "bash scripts/vercel-install.sh",
+  "framework": "nextjs",
+  "functions": {
+    "api/py/[...path].py": {
+      "memory": 1024,
+      "maxDuration": 60
+    }
+  },
+  "routes": [
+    { "src": "/py/(.*)", "dest": "/api/py/$1" }
+  ]
+}
