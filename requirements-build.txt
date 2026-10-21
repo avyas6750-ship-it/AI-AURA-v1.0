@@ -1,0 +1,13 @@
+# ============================================================
+# HYDROGRAPH - Build-time Python dependencies
+# Only needed during the Vercel build phase (model training).
+# NOT included in the serverless function bundle (to stay under 500 MB).
+# ============================================================
+
+# Everything from requirements.txt (runtime deps)
+-r requirements.txt
+
+# ---- Build-time only (model training + data prep) ----
+pandas>=2.0.0
+matplotlib>=3.7.0
+plotly>=5.18.0
