@@ -192,7 +192,7 @@ class Retrainer:
             # won't include it (which is fine for the demo).
             print(f"[Retrainer.append_sample] Cannot write to {DATASET_PATH}: {e}")
 
-     def retrain(self, classifier: AcousticClassifier) -> dict:
+    def retrain(self, classifier: AcousticClassifier) -> dict:
         """Retrain the RandomForest on the accumulated CSV dataset.
 
         Returns a dict with new version, accuracy, and sample count.
@@ -260,8 +260,8 @@ class Retrainer:
         entry = {
             "version": new_ver,
             "accuracy": accuracy,
-            "trained_on": int(len(df)),
-            "note": f"Incremental retrain on {len(df)} samples (CV acc {acc_str})",
+            "trained_on": int(len(rows)),
+            "note": f"Incremental retrain on {len(rows)} samples (CV acc {acc_str})",
         }
         classifier.pipeline = pipeline
         classifier.version = new_ver
