@@ -5,16 +5,23 @@ import { useCallback, useEffect, useRef, useState } from "react";
 /**
  * Build the API URL for a given path.
  *
- * On Vercel (production), /py/* is routed to the Python serverless function
- * via vercel.json routes — so we just use the relative path as-is.
+ * On Vercel (production), the Python serverless function lives at /api/py/*.
+ * We detect the Vercel environment via the URL hostname (.vercel.app) and
+ * rewrite /py/* → /api/py/* automatically.
  *
  * In local dev, Next.js's next.config.ts rewrite proxies /py/* to the local
- * FastAPI server on port 8000. So again, just use the relative path.
- *
- * The old XTransformPort query param was for the Render/Caddy proxy — no
- * longer needed on Vercel.
+ * FastAPI server on port 8000 — so we just use /py/* as-is.
  */
 function apiUrl(path: string) {
+  // On Vercel production, route /py/* to /api/py/* (the Python serverless function)
+  if (typeof window !== "undefined" && window.location.hostname.endsWith(".vercel.app")) {
+    if (path.startsWith("/py/")) {
+      return `/api${path}`;
+    }
+    if (path.startsWith("py/")) {
+      return `/api/${path}`;
+    }
+  }
   return path;
 }
 
