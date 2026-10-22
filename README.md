@@ -1,4 +1,4 @@
-# 🌊 HYDROGRAPH — Underwater Acoustic Classifier
+# 🌊 AI AURAv1.0(HYDROGRAPH) — Underwater Acoustic Classifier
 
 > **Listen to the ocean.**
 > AI-powered classification of hydrophone recordings into **biophonic**, **anthropogenic**, and **geophonic** sound events — built for marine researchers, by marine researchers.
@@ -84,69 +84,9 @@ hydrograph/
 
 ---
 
-## 🚀 Local Development
 
-### Prerequisites
-- **Node.js 20+** (recommend using [bun](https://bun.sh) for faster installs)
-- **Python 3.12+**
-- ~2GB free disk space (for node_modules + Python deps)
 
-### Setup
 
-```bash
-# 1. Clone the repo
-git clone https://github.com/YOUR_USERNAME/hydrograph.git
-cd hydrograph
-
-# 2. Install Python deps
-python -m venv .venv
-source .venv/bin/activate          # on Windows: .venv\Scripts\activate
-pip install -r requirements.txt
-
-# 3. (Optional) Regenerate samples + train baseline
-python scripts/generate_mock_audio.py 8
-python scripts/train_baseline.py
-
-# 4. Start FastAPI backend in one terminal
-uvicorn backend.api:app --host 0.0.0.0 --port 8000 --reload
-
-# 5. Start Next.js dev server in another terminal
-bun install                         # or: npm install
-bun run dev                         # or: npm run dev
-```
-
-Open **http://localhost:3000**.
-
----
-
-## 🌐 Deploy to Render
-
-### Option A — Render Blueprint (recommended, 2 services)
-
-1. Push this repo to GitHub.
-2. On Render, go to **Dashboard → New → Blueprint**.
-3. Pick your GitHub repo. Render will detect `render.yaml` and create 2 services:
-   - `hydrograph-api` (FastAPI on Python runtime, free tier)
-   - `hydrograph-web` (Next.js on Node runtime, free tier)
-4. Once `hydrograph-api` is deployed, copy its public URL (e.g. `https://hydrograph-api.onrender.com`).
-5. Go to **`hydrograph-web` → Environment → Add Environment Variable**:
-   - Key: `BACKEND_URL`
-   - Value: `https://hydrograph-api.onrender.com` (no trailing slash)
-6. Trigger a redeploy of `hydrograph-web`.
-
-### Option B — Single-service deploy (simpler, both in one process)
-
-1. Push this repo to GitHub.
-2. On Render, go to **Dashboard → New → Web Service**.
-3. Pick your GitHub repo. Render will detect the `Procfile` automatically:
-   - **Build Command**: `pip install -r requirements.txt && bun install && bun run build && python scripts/generate_mock_audio.py 8 && python scripts/train_baseline.py`
-   - **Start Command**: `bash scripts/start.sh`
-4. Add env var: `PYTHON_VERSION` = `3.12.14` and `NODE_VERSION` = `20.18.0`.
-5. Deploy. Render assigns `$PORT` automatically — the start script runs Next.js on `$PORT` and FastAPI on an internal port `8000`.
-
-> ⚠️ Option B is simpler but shares resources between frontend + backend. For production use, prefer Option A.
-
----
 
 ## 🔌 API Reference
 
